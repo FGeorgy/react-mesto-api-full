@@ -1,58 +1,61 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { compare } = require('bcrypt');
-const UnauthorizedError = require('../errors/unauthorized-error');
+const bcrypt = require('bcryptjs');
+
+const { ErrorBadAuth } = require('../errors/ErrorBadAuth');
+
+const { REGEX_URL } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: [2, 'Текст должен быть не короче 2 символов'],
-    maxlength: [30, 'Текст должен быть короче 30 символов'],
     default: 'Жак-Ив Кусто',
+    minlength: 2,
+    maxlength: 30,
   },
   about: {
     type: String,
-    minlength: [2, 'Текст должен быть не короче 2 символов'],
-    maxlength: [30, 'Текст должен быть короче 30 символов'],
     default: 'Исследователь',
+    minlength: 2,
+    maxlength: 30,
   },
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator(v) {
-        return /^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/gm.test(v);
-      },
-      message: 'Введен некорректный URL',
+      validator: (v) => REGEX_URL.test(v),
+      message: 'Невалидный аватар',
     },
   },
   email: {
     type: String,
-    required: [true, 'Введите email'],
+    required: true,
     unique: true,
     validate: {
-      validator: (email) => validator.isEmail(email),
-      message: 'Введен некорректный email',
+      validator: (value) => validator.isEmail(value), message: 'Невалидный email',
     },
   },
   password: {
     type: String,
-    required: [true, 'Введите пароль'],
     select: false,
+    required: true,
   },
 });
 
-userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
-  return this.findOne({ email }).select('+password')
+userSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError('Ошибка авторизации');
+        throw new ErrorBadAuth('Неправильные почта или пароль');
       }
-      return compare(password, user.password)
+
+      return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError('Ошибка авторизации');
+            throw new ErrorBadAuth('Неправильные почта или пароль');
           }
+
           return user;
         });
     });

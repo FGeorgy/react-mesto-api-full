@@ -1,20 +1,18 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Введите название'],
-    minlength: [2, 'Текст должен быть не короче 2 символов'],
-    maxlength: [30, 'Текст должен быть короче 30 символов'],
+    required: true,
+    minlength: 2,
+    maxlength: 30,
   },
   link: {
     type: String,
-    required: [true, 'Введите URL'],
+    required: true,
     validate: {
-      validator(v) {
-        return /^(https?:\/\/)?([\w-]{1,32}\.[\w-]{1,32})[^\s@]*/gm.test(v);
-      },
-      message: 'Ошибка проверки url адреса',
+      validator: (value) => validator.isURL(value), message: 'Невалидная ссылка',
     },
   },
   owner: {
@@ -22,13 +20,13 @@ const cardSchema = new mongoose.Schema({
     ref: 'user',
     required: true,
   },
-  likes: {
-    type: [{
+  likes: [
+    {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'user',
       default: [],
-    }],
-  },
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,
