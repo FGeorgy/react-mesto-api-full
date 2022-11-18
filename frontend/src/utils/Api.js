@@ -92,7 +92,7 @@ class Api {
 }
 
 export default new Api({
-  url: 'api.fgeorg.nomorepartiesxyz.ru',
+  url: 'https://api.fgeorg.nomorepartiesxyz.ru',
   headers: {
     'Authorization': 'Bearer ' + localStorage.getItem('token'),
     'Accept': 'application/json',

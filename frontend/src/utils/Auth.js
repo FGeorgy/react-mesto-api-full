@@ -1,4 +1,4 @@
-export const BASE_URL = 'api.fgeorg.nomorepartiesxyz.ru';
+export const BASE_URL = 'https://api.fgeorg.nomorepartiesxyz.ru';
 
 export const register = (email, password) => {
   console.log(email, password);
