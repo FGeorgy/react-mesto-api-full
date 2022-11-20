@@ -122,8 +122,8 @@ function App() {
     auth.authorize(email, password)
       .then((res) => {
         if (res.token) {
-          setLoggedIn(true);
           localStorage.setItem('token', res.token);
+          setLoggedIn(true);
           setEmail(email);
           navigate("/", { replace: true });
         }
