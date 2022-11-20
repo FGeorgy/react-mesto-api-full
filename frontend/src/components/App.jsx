@@ -30,7 +30,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [cards, setCards] = React.useState([]);
   const [loggedIn, setLoggedIn] =React.useState(false);
-  const [tooltipMessage, setTooltipMessage] = React.useState( {img: '', text: ''} );
+  const [tooltipMessage, setTooltipMessage] = React.useState( {} );
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = React.useState(false);
   const [email, setEmail] = React.useState('');
 
@@ -107,16 +107,15 @@ function App() {
   function handleRegistration(email, password) {
     auth.register(email, password)
       .then((res) => {
-        if (res) {
-          setTooltipMessage({ img: success, text: 'Вы успешно зарегистрировались!' });
-          navigate("/sign-in", { replace: true });
-        }
+        setTooltipMessage({ img: success, text: 'Вы успешно зарегистрировались!' });
+        navigate("/sign-in", { replace: true });
+        setIsInfoTooltipOpen(true);
       })
       .catch((err) => {
         console.log(err);
         setTooltipMessage({ img: unSucces, text: 'Что-то пошло не так! Попробуйте ещё раз.' });
+        setIsInfoTooltipOpen(true);
       })
-      .finally(() => setIsInfoTooltipOpen(true));
   }
 
   function handleLogin(email, password) {
@@ -171,6 +170,12 @@ function App() {
         .catch((err) => console.log(err));
     }
   }, [loggedIn]);
+
+  React.useEffect(() => {
+    if (!isInfoTooltipOpen) {
+      setTooltipMessage({});
+    }
+  }, [isInfoTooltipOpen === true]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>

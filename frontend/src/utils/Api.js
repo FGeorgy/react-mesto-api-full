@@ -19,7 +19,11 @@ class Api {
   getInitialCards() {
     const promise = fetch(`${this._url}/cards`, {
       method: 'GET',
-      headers: this._headers
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      }
     })
   
     return this._makeRequest(promise);
@@ -28,7 +32,11 @@ class Api {
   getUserInfo() {
     const promise = fetch(`${this._url}/users/me`, {
       method: 'GET',
-      headers: this._headers
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      }
     })
 
     return this._makeRequest(promise);
@@ -37,7 +45,11 @@ class Api {
   setUserInfo(userData) {
     const promise = fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      },
       body: JSON.stringify({
         name: userData.name,
         about: userData.about
@@ -50,7 +62,11 @@ class Api {
   addCard(data) {
     const promise = fetch(`${this._url}/cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      },
       body: JSON.stringify({
         name: data.name,
         link: data.link
@@ -63,7 +79,11 @@ class Api {
   deleteCard(id) {
     const promise = fetch(`${this._url}/cards/${id}`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      }
     })
 
     return this._makeRequest(promise);
@@ -72,7 +92,11 @@ class Api {
   changeLikeCardStatus(id, isLiked) {
     const promise = fetch(`${this._url}/cards/${id}/likes`, {
       method: `${isLiked ? 'PUT' : 'DELETE'}`,
-      headers: this._headers
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      }
     })
 
     return this._makeRequest(promise);
@@ -81,7 +105,11 @@ class Api {
   setUserAvatar(data) {
     const promise = fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=utf-8'
+      },
       body: JSON.stringify({
         avatar: data.avatar
       })
@@ -93,9 +121,4 @@ class Api {
 
 export default new Api({
   url: 'https://api.fgeorg.nomorepartiesxyz.ru',
-  headers: {
-    'Authorization': 'Bearer ' + localStorage.getItem('token'),
-    'Accept': 'application/json',
-    'Content-Type': 'application/json; charset=utf-8'
-  }
 })

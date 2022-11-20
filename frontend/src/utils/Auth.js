@@ -1,7 +1,6 @@
 export const BASE_URL = 'https://api.fgeorg.nomorepartiesxyz.ru';
 
 export const register = (email, password) => {
-  console.log(email, password);
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
     headers: {
@@ -11,13 +10,10 @@ export const register = (email, password) => {
     body: JSON.stringify({email, password})
   })
   .then((response) => {
-    console.log(response);
     if(response.ok) {
       return response.json();
     }
-  })
-  .catch((err) => {
-    console.log(err);
+    return Promise.reject(`Ошибка: ${response.status}`);
   })
 };
 
@@ -34,14 +30,8 @@ export const authorize = (email, password) => {
     if(response.ok) {
       return response.json();
     }
+    return Promise.reject(`Ошибка: ${response.status}`);
   })
-  // .then((data) => {
-  //   if (data.token) {
-  //     localStorage.setItem('token', data.token);
-  //     return data;
-  //   }
-  // })
-  .catch((err) => console.log(err));
 };
 
 export const getContent = token => {
@@ -54,12 +44,9 @@ export const getContent = token => {
     }
   })
     .then((response) => {
-      try {
-        if (response.status === 200) {
-          return response.json();
-        }
-      } catch(e) {
-        return(e)
+      if(response.ok) {
+        return response.json();
       }
+      return Promise.reject(`Ошибка: ${response.status}`);
     })
 }
