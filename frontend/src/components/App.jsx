@@ -122,8 +122,9 @@ function App() {
   function handleLogin(email, password) {
     auth.authorize(email, password)
       .then((res) => {
-        if (res) {
+        if (res.token) {
           setLoggedIn(true);
+          localStorage.setItem('token', res.token);
           setEmail(email);
           navigate("/", { replace: true });
         }

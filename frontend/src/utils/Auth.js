@@ -35,12 +35,12 @@ export const authorize = (email, password) => {
       return response.json();
     }
   })
-  .then((data) => {
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      return data;
-    }
-  })
+  // .then((data) => {
+  //   if (data.token) {
+  //     localStorage.setItem('token', data.token);
+  //     return data;
+  //   }
+  // })
   .catch((err) => console.log(err));
 };
 
